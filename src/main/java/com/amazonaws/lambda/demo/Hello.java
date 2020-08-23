@@ -10,6 +10,9 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 
 public class Hello implements RequestHandler<Object, String> {
 
@@ -34,7 +37,12 @@ public class Hello implements RequestHandler<Object, String> {
 		String s3fileName = fileName + date.getYear() + "-" + date.getMonthValue() + "-" + date.getDayOfMonth() + "-"
 				+ date.getHour() + "-" + context.getAwsRequestId() + ".txt";
 		try {
-			s3Client.putObject(bucketName, s3fileName, stringObjKeyName).getMetadata().setContentType("plain/text");
+			ObjectMetadata metadata = new ObjectMetadata();
+			metadata.setContentType("plain/text");
+           PutObjectRequest putObj = new PutObjectRequest(bucketName, s3fileName, stringObjKeyName);
+           putObj.setCannedAcl(CannedAccessControlList.PublicRead);
+           putObj.setMetadata(metadata);
+			s3Client.putObject(putObj);
 
 		} catch (AmazonServiceException e) {
 			e.printStackTrace();
