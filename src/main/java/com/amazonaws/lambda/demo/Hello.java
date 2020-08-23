@@ -14,7 +14,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 public class Hello implements RequestHandler<Object, String> {
 
 	Regions clientRegion = Regions.US_EAST_1;
-	String bucketName = "store-events-from-api";
+	String bucketName = "store-events-from-apigatway";
 	String stringObjKeyName = "";
 	String fileName = "input/";
 
